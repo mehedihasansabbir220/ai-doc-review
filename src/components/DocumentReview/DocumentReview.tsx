@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+import Image from 'next/image';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Textarea } from '../ui/textarea';
@@ -50,6 +51,33 @@ const DocumentReview = () => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
+  // Cleanup object URLs when component unmounts or image changes
+  React.useEffect(() => {
+    return () => {
+      // Cleanup function will be called when component unmounts
+      // Object URLs are automatically cleaned up when the component unmounts
+    };
+  }, [companyInfo.image]);
+
+  // State to store object URL for cleanup
+  const [imageObjectUrl, setImageObjectUrl] = useState<string | null>(null);
+
+  // Create object URL when image changes
+  React.useEffect(() => {
+    if (companyInfo.image) {
+      const objectUrl = URL.createObjectURL(companyInfo.image);
+      setImageObjectUrl(objectUrl);
+      
+      // Cleanup function
+      return () => {
+        URL.revokeObjectURL(objectUrl);
+        setImageObjectUrl(null);
+      };
+    } else {
+      setImageObjectUrl(null);
+    }
+  }, [companyInfo.image]);
+
   // Handle file selection
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -93,6 +121,14 @@ const DocumentReview = () => {
     setCompanyInfo(prev => ({ ...prev, image: files[0] }));
     
     // Clear the input value to allow selecting the same file again
+    if (imageInputRef.current) {
+      imageInputRef.current.value = '';
+    }
+  };
+
+  // Remove company image
+  const handleRemoveImage = () => {
+    setCompanyInfo(prev => ({ ...prev, image: null }));
     if (imageInputRef.current) {
       imageInputRef.current.value = '';
     }
@@ -531,12 +567,39 @@ const DocumentReview = () => {
                   <ImageIcon className="w-4 h-4 mr-2" />
                   Choose Image
                 </Button>
-                {companyInfo.image && (
-                  <span className="text-sm text-gray-600">
-                    Selected: {companyInfo.image.name}
-                  </span>
-                )}
               </div>
+              
+              {/* Image preview and remove button */}
+              {companyInfo.image && (
+                <div className="mt-3 p-3 bg-gray-50 rounded-lg border">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-medium text-gray-700">
+                      Selected Logo: {companyInfo.image.name}
+                    </span>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleRemoveImage}
+                      disabled={loading}
+                      className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                    >
+                      <X className="w-3 h-3 mr-1" />
+                      Remove
+                    </Button>
+                  </div>
+                  <div className="flex items-center justify-center">
+                    {imageObjectUrl && (
+                      <Image
+                        src={imageObjectUrl}
+                        alt="Company Logo Preview"
+                        width={128}
+                        height={128}
+                        className="max-w-32 max-h-32 object-contain rounded border"
+                      />
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
 
             <Button 
