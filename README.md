@@ -2,6 +2,33 @@
 
 A powerful Next.js application that uses OpenAI Vision to extract and process text from images and PDFs. Features a ChatGPT-like interface with support for multiple file uploads, custom prompts, and intelligent text processing.
 
+---
+
+## 🚀 NEW: Document Review (AI-Powered)
+
+### Overview
+- **AI-Powered Validation**: Each uploaded document is analyzed by AI to determine its type and confidence.
+- **Required Documents**: The system checks for all required legal documents (e.g., declaration, bylaws, financials, etc.).
+- **Smart Renaming**: Files with random names are automatically suggested new names based on their detected type and the current date.
+- **Multi-File Upload**: Upload multiple files at once or one by one.
+- **User Feedback**: Clear error messages, missing document lists, and download options for renamed files.
+- **No Review Without All Required Docs**: The review cannot be completed until all required documents are present.
+
+### How It Works
+1. **Go to the Document Review tab** at the top of the app.
+2. **Upload your documents** (PDFs, images, etc.).
+3. **See which documents are missing** and which are detected, with AI confidence scores.
+4. **Download renamed files** for better organization.
+5. **Provide company info** and generate a comprehensive review once all required docs are present.
+
+### Example Workflow
+- Upload files with random names (e.g., `23e23ejnc.pdf`, `IMG_001.jpg`).
+- AI analyzes each file and suggests names like `2024-06-10_bylaws.pdf`.
+- If any required document is missing, you’ll see a list and can’t proceed.
+- Download renamed files, re-upload as needed, and complete the review.
+
+---
+
 ## 🚀 Features
 
 ### Core Functionality
