@@ -232,6 +232,7 @@ Confidence should be between 0.0 and 1.0, where 1.0 means you're completely cert
         details: result.details || 'No details provided'
       };
     } catch (parseError) {
+      console.error('Error parsing JSON response:', parseError);
       // If JSON parsing fails, try to extract information from text
       const lowerResponse = response.toLowerCase();
       let documentType = 'other';

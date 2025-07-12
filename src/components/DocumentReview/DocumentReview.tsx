@@ -2,8 +2,14 @@ import React, { useRef, useState } from 'react';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Textarea } from '../ui/textarea';
-import { Paperclip, Loader, FileText, X, Building, Image as ImageIcon, AlertTriangle, Download, FileDown } from 'lucide-react';
+import { Paperclip, Loader, FileText, X, Image as ImageIcon, AlertTriangle, Download, FileDown } from 'lucide-react';
 import { convertPdfToImages } from '@/lib/pdfToImage';
+
+type Analysis = {
+  documentType?: string;
+  confidence?: number;
+  details?: string;
+};
 
 interface ReviewMessage {
   id: string;
@@ -203,11 +209,15 @@ const DocumentReview = () => {
           // Add document analysis if available
           if (data.documentAnalysis) {
             errorContent += `\n\n**📋 Document Analysis:**\n`;
-            Object.entries(data.documentAnalysis).forEach(([filename, analysis]: [string, any]) => {
+            Object.entries(data.documentAnalysis).forEach(([filename, analysis]) => {
+              const a = analysis as Analysis;
+              const docType = typeof a.documentType === 'string' ? a.documentType : 'unknown';
+              const confidence = typeof a.confidence === 'number' ? a.confidence : 0;
+              const details = typeof a.details === 'string' ? a.details : '';
               errorContent += `\n**${filename}**:\n`;
-              errorContent += `• Type: ${analysis.documentType}\n`;
-              errorContent += `• Confidence: ${Math.round(analysis.confidence * 100)}%\n`;
-              errorContent += `• Details: ${analysis.details}\n`;
+              errorContent += `• Type: ${docType}\n`;
+              errorContent += `• Confidence: ${Math.round(confidence * 100)}%\n`;
+              errorContent += `• Details: ${details}\n`;
             });
           }
           
@@ -318,7 +328,7 @@ const DocumentReview = () => {
           <div className="text-center text-gray-400 mt-10">
             <FileText className="w-16 h-16 mx-auto mb-4 text-gray-300" />
             <p className="text-lg font-medium">Upload your documents to get started</p>
-            <p className="text-sm">We'll analyze them and generate a comprehensive review</p>
+            <p className="text-sm">We&apos;ll analyze them and generate a comprehensive review</p>
           </div>
         )}
         
@@ -362,7 +372,7 @@ const DocumentReview = () => {
               Suggested Document Renames
             </h3>
             <p className="text-sm text-blue-700 mb-3">
-              We've detected the document types. You can download them with proper names for better organization:
+              We&apos;ve detected the document types. You can download them with proper names for better organization:
             </p>
             <div className="space-y-2">
               {suggestedRenames.map((rename, index) => (
