@@ -514,20 +514,23 @@ const DocumentReview = () => {
                 Company Logo/Image (Optional)
               </label>
               <div className="flex items-center gap-2">
-                <label className="cursor-pointer flex items-center">
-                  <input
-                    ref={imageInputRef}
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    onChange={handleImageChange}
-                    disabled={loading}
-                  />
-                  <Button variant="outline" size="sm" disabled={loading}>
-                    <ImageIcon className="w-4 h-4 mr-2" />
-                    Choose Image
-                  </Button>
-                </label>
+                <input
+                  ref={imageInputRef}
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleImageChange}
+                  disabled={loading}
+                />
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  disabled={loading}
+                  onClick={() => imageInputRef.current?.click()}
+                >
+                  <ImageIcon className="w-4 h-4 mr-2" />
+                  Choose Image
+                </Button>
                 {companyInfo.image && (
                   <span className="text-sm text-gray-600">
                     Selected: {companyInfo.image.name}
